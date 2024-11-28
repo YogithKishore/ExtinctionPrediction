@@ -59,7 +59,12 @@ print("Mean Squared Error:", mse)
 print("RMSE: %0.2f" % (rmse))
 
 # Filling new_data with the data of the Amur Tigers
-new_data = pd.DataFrame({"Animal": ["Amur Tiger"], "Height (cm)": [26], "Weight (kg)": [40], "Color": ["Yellow-brown"], "Diet": ["Carnivore"], "Habitat": ["Forest"], "Predators": ["Tigers, Humans"], "Average Speed (km/h)": [54], "Countries Found": ["Asia"], "Conservation Status": ["Critically Endangered"], "Family": ["Felidae"], "Gestation Period (days)": [90], "Top Speed (km/h)": [60], "Social Structure": ["Solitary"], "Offspring per Birth": [2]})
+new_data = pd.DataFrame({"Animal": ["Amur Tiger"], "Height (cm)": [26], "Weight (kg)": [40],
+                         "Color": ["Yellow-brown"], "Diet": ["Carnivore"], "Habitat": ["Forest"], 
+                         "Predators": ["Tigers, Humans"], "Average Speed (km/h)": [54], 
+                         "Countries Found": ["Asia"], "Conservation Status": ["Critically Endangered"], 
+                         "Family": ["Felidae"], "Gestation Period (days)": [90], "Top Speed (km/h)": [60], 
+                         "Social Structure": ["Solitary"], "Offspring per Birth": [2]})
 
 # One-hot encode the new data
 new_data_encoded = pd.get_dummies(new_data)
