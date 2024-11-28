@@ -1,4 +1,5 @@
-Please install the following imports using the "pip install" command
+Install python
+Install the following imports using the "pip install" command
   pandas
   numpy
   math
