@@ -10,7 +10,7 @@ import math
 import datetime
 
 # Declaring the dataset
-SpeciesDataFrame = pd.read_csv("/content/Animal Dataset.csv")
+SpeciesDataFrame = pd.read_csv("Animal Dataset.csv")
 
 # Seperates each row to represent a single characteristic for simplicity
 if "Habitat" in SpeciesDataFrame.columns and "Predators" in SpeciesDataFrame.columns:
