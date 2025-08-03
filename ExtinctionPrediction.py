@@ -5,12 +5,13 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
 import math
 import datetime
 
 # Declaring the dataset
-SpeciesDataFrame = pd.read_csv("Animal Dataset.csv")
+SpeciesDataFrame = pd.read_csv("/content/Animal Dataset.csv")
 
 # Seperates each row to represent a single characteristic for simplicity
 if "Habitat" in SpeciesDataFrame.columns and "Predators" in SpeciesDataFrame.columns:
@@ -52,19 +53,8 @@ model = RandomForestRegressor()
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
-# Test accuracy of the model by using the RMSE value
-mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
-print("Mean Squared Error:", mse)
-print("RMSE: %0.2f" % (rmse))
-
 # Filling new_data with the data of the Amur Tigers
-new_data = pd.DataFrame({"Animal": ["Amur Tiger"], "Height (cm)": [26], "Weight (kg)": [40],
-                         "Color": ["Yellow-brown"], "Diet": ["Carnivore"], "Habitat": ["Forest"], 
-                         "Predators": ["Tigers, Humans"], "Average Speed (km/h)": [54], 
-                         "Countries Found": ["Asia"], "Conservation Status": ["Critically Endangered"], 
-                         "Family": ["Felidae"], "Gestation Period (days)": [90], "Top Speed (km/h)": [60], 
-                         "Social Structure": ["Solitary"], "Offspring per Birth": [2]})
+new_data = pd.DataFrame({"Animal": ["Amur Tiger"], "Height (cm)": [26], "Weight (kg)": [40], "Color": ["Yellow-brown"], "Diet": ["Carnivore"], "Habitat": ["Forest"], "Predators": ["Tigers, Humans"], "Average Speed (km/h)": [54], "Countries Found": ["Asia"], "Conservation Status": ["Critically Endangered"], "Family": ["Felidae"], "Gestation Period (days)": [90], "Top Speed (km/h)": [60], "Social Structure": ["Solitary"], "Offspring per Birth": [2]})
 
 # One-hot encode the new data
 new_data_encoded = pd.get_dummies(new_data)
@@ -84,31 +74,31 @@ OffspringPerYearPerAnimal = (OffspringPerBirth*NumOfBirths)/new_predictions
 # Calculates Deaths Per Year
 Population = 100
 DeathRatePerYear = Population/new_predictions
-print(DeathRatePerYear)
+# print("Death Rate per Year: ", DeathRatePerYear)
 
 # Calculates total Offspring Births Per Year and calculates population difference
 OffspringPerYear = OffspringPerYearPerAnimal * Population
 Rate = OffspringPerYear - DeathRatePerYear
-print(Rate)
+# print("Change in Species Population: ", Rate)
 
 # Calculates Death Rate Per Year
 Population = 100
 FemPop = Population/2
 Lifespan = new_predictions[0]
 DeathRatePerYear = 1/Lifespan * Population
-print(DeathRatePerYear)
+# print("Death Rate Per Year: ", DeathRatePerYear)
 
 # Calculates Births Per Year
 BirthsPerYearPerAnimal = 1 * new_data["Offspring per Birth"].iloc[0]
-print(BirthsPerYearPerAnimal)
+# print("Births Per Year Per Animal: ", BirthsPerYearPerAnimal)
 BirthsPerYear = FemPop * BirthsPerYearPerAnimal
-print(BirthsPerYear)
+# print("Births Per Year: ", BirthsPerYear)
 
 # Calculates population difference per year
 RateOfChange = BirthsPerYear - DeathRatePerYear
-print(RateOfChange)
+# print("Rate of Change of Species Population: ", RateOfChange)
 GrowthRate = (RateOfChange/Population)
-print(GrowthRate)
+# print("Growth Rate of Species: ", GrowthRate)
 
 # Sets Graph Axis Numbers & Labels
 TimePeriod = 50
@@ -116,6 +106,13 @@ t = np.arange(0, TimePeriod + 1)
 FuturePop = Population * (GrowthRate)**t
 end_date = datetime.date.today()
 dates = [end_date + datetime.timedelta(days = 365*n) for n in range(TimePeriod + 1)]
+
+model = RandomForestRegressor()
+# negative MSE scoring, so we negate and sqrt it for RMSE
+neg_mse_scores = cross_val_score(model, X, y, cv=10, scoring='neg_mean_squared_error')
+rmse_scores = np.sqrt(-neg_mse_scores)
+print("Cross-validated RMSE scores:", rmse_scores)
+print("Average RMSE:", rmse_scores.mean())
 
 # Displays the Graph
 plt.figure(figsize = (10,6))
