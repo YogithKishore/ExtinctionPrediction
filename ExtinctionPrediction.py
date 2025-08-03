@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 import math
 import datetime
@@ -111,8 +112,14 @@ model = RandomForestRegressor()
 # negative MSE scoring, so we negate and sqrt it for RMSE
 neg_mse_scores = cross_val_score(model, X, y, cv=10, scoring='neg_mean_squared_error')
 rmse_scores = np.sqrt(-neg_mse_scores)
-print("Cross-validated RMSE scores:", rmse_scores)
+# print("Cross-validated RMSE scores:", rmse_scores)
 print("Average RMSE:", rmse_scores.mean())
+
+r2 = r2_score(y_test, y_pred)
+print("R² score (variance explained): ", r2)
+print("Percent variance explained: ", format(r2 * 100))
+
+print("Range of lifespan values:", y.min(), "to", y.max())
 
 # Displays the Graph
 plt.figure(figsize = (10,6))
